@@ -189,7 +189,7 @@ data = getIssues();
 
 		<cfscript>
 
-		if(url.keyExists("id")) {
+		if(url.keyExists("id") && url.id !== "") {
 			issue = getIssue(url.id);
 			param name="form.id" default=issue.ID;
 			param name="form.title" default=issue.Title;
@@ -199,7 +199,7 @@ data = getIssues();
 			param name="form.resolution" default=issue.Resolution;
 			form
 		} else {
-			param name="form.id" default="";
+			param name="url.id" default="";
 			param name="form.title" default="";
 			param name="form.description" default="";
 			param name="form.status" default="";
@@ -209,18 +209,32 @@ data = getIssues();
 
 		// todo, validation, yolo
 		if(form.keyExists("save")) {
-			newIssue = ["ID":form.id, "Title":form.title, "Description":form.description, status:form.status, priority:form.priority, resolution:form.resolution ];
+			newIssue = ["ID":url.id, "Title":form.title, "Description":form.description, status:form.status, priority:form.priority, resolution:form.resolution ];
 			saveIssue(newIssue);
 			location(url="?");
+		}
+
+		if(url.keyExists("print")) {
+
+			cfdocument(format="pdf") {
+				writeOutput("<h2>Issue #url.id#: #form.title#</h2>");
+				writeOutput("<p><strong>Status: </strong> #form.status#<br>");
+				writeOutput("<strong>Priority: </strong> #form.priority#<br>");
+				writeOutput("<strong>Resolution: </strong> #form.resolution#<br>");
+				// I'm removing the ability to print new issues RAY TOMORROW keep this and edit button
+				if(variables.keyExists("issue") && issue.keyExists("Created")) writeOutput("<strong>Created: </strong> #issue.Created#<br>");
+				if(variables.keyExists("issue") && issue.keyExists("Updated")) writeOutput("<strong>Updated: </strong> #issue.Updated#</p>");
+
+				writeOutput("<p>#form.description#</p>");
+			}
 		}
 		</cfscript>
 
 		<cfoutput>
-		<form action="?route=issue" method="post" class="input-validation-required">
+		<form action="?route=issue&id=#url.id#" method="post" class="input-validation-required">
 
-			<input type="hidden" name="id" value="#form.id#">
 			<sl-input name="title" label="Title" value="#form.title#" required></sl-input>
-			<sl-textarea name="description" label="Description" value="#form.description#" required></sl-textarea>
+			<sl-textarea name="description" label="Description" value="#form.description#" required resize="auto"></sl-textarea>
 
 			<sl-select label="Status" name="status" value="#form.status#" required>
 			<cfloop item="s" array="#statusArr#" >
@@ -240,14 +254,15 @@ data = getIssues();
 			</cfloop>
 			</sl-select>
 
-			<cfif form.id != "">
+			<cfif url.id != "">
 				<p>
 				This issue was created #issue.Created#.
 				</p>
 			</cfif>
 
 			<sl-button href="?" variant="neutral">Cancel</sl-button>
-			<sl-button type="submit" variant="primary" name="save">Save</sl-button>
+			<sl-button variant="primary" name="print" href="?route=issue&id=#url.id#&print=true" target="_blank"><sl-icon name="file-pdf"></sl-icon> Print</sl-button>
+			<sl-button type="submit" variant="primary" name="save"><sl-icon name="floppy"></sl-icon> Save</sl-button>
 		</form>
 		</cfoutput>	
 
