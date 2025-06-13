@@ -20,6 +20,8 @@ priorityArr = ["LOW", "MEDIUM", "HIGH"];
 
 ## Installation
 
+Ensure the "Document" module is installed in your ColdFusion instance.
+
 Copy `quicktracker.cfm` to your web root and open it in your browser. That's it.
 
 The template makes use of multiple ColdFusion 2025 features so be sure you are running in that version.
@@ -34,5 +36,5 @@ You can also export the CSV as well as generate reports.
 
 | Date | Description |
 | ---- | ----------  |
-| June 13 | Added a screenshot |
+| June 13 | Added a screenshot and noted Document module need |
 | May 13, 2025 | Initial Release |
