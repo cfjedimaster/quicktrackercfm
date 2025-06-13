@@ -24,8 +24,15 @@ Copy `quicktracker.cfm` to your web root and open it in your browser. That's it.
 
 The template makes use of multiple ColdFusion 2025 features so be sure you are running in that version.
 
+The default screen is a list of any issues:
+
+![List of issues](./screenshot1.png)
+
+You can also export the CSV as well as generate reports.
+
 ## Release History
 
 | Date | Description |
 | ---- | ----------  |
+| June 13 | Added a screenshot |
 | May 13, 2025 | Initial Release |
